@@ -1,0 +1,8 @@
+#   Auto-Generated Files
+.DS*
+
+#   CMake Files
+cmake-build-*/
+
+#   Executables
+bin/
