@@ -1,5 +1,2 @@
-# pbl - Pasteboard List
-
-### Currently under development. 
-
-#### Platform: MacOS
+## pbl
+Pasteboard List
