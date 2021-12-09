@@ -1,8 +1,14 @@
 #   Auto-Generated Files
 .DS*
+*.cbp
 
 #   CMake Files
 cmake-build-*/
+cmake_*
+CMakeFiles*
+CMakeCache*
+Makefile*
+Testing/
 
 #   Executables
 bin/
