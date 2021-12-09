@@ -1,11 +1,11 @@
 cmake_minimum_required(VERSION 3.20)
-project(pbl)
+project(pbl LANGUAGES C CXX OBJC OBJCXX)
 
 # -----------------------------------------------------------------
 #   CMake Variables
 # -----------------------------------------------------------------
 set(CMAKE_CXX_STANDARD 17)
-set(CMAKE_VERBOSE_MAKEFILE 1) # Enable for more verbose CMake output
+set(CMAKE_VERBOSE_MAKEFILE 1)       # Enable for more verbose CMake output
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY "${CMAKE_CURRENT_LIST_DIR}/bin")
 
 # -----------------------------------------------------------------
@@ -14,43 +14,39 @@ set(CMAKE_RUNTIME_OUTPUT_DIRECTORY "${CMAKE_CURRENT_LIST_DIR}/bin")
 set(PROJECT_SOURCE_DIR "${CMAKE_CURRENT_LIST_DIR}/src")
 
 # -----------------------------------------------------------------
-#   Target Sources and Create Executable
+#   Target Sources
 # -----------------------------------------------------------------
 file(GLOB_RECURSE PROJECT_SOURCES
         "${PROJECT_SOURCE_DIR}/*.h"
         "${PROJECT_SOURCE_DIR}/*.cpp"
+        "${PROJECT_SOURCE_DIR}/*.mm"
         )
 
-# We do not want to include the pch in the sources
+# We do not want to include duplicates
 list(REMOVE_ITEM PROJECT_SOURCES "${PROJECT_SOURCE_DIR}/pblpch.h")
 
 # -----------------------------------------------------------------
-#   Create executable
+#   Create Executable
 # -----------------------------------------------------------------
 add_executable(${PROJECT_NAME} "${PROJECT_SOURCES}")
 
 # -----------------------------------------------------------------
-#   Include directories
+#   Include Directories
 # -----------------------------------------------------------------
 target_include_directories(${PROJECT_NAME} PUBLIC
         "${PROJECT_SOURCE_DIR}"
         )
 
 # -----------------------------------------------------------------
-#   MacOSX Dependencies
+#   MacOSX Libraries
 # -----------------------------------------------------------------
-# Required for IOKit Headers
-target_include_directories(${PROJECT_NAME} PUBLIC
-        "/Library/Developer/CommandLineTools/SDKs/MacOSX10.15.sdk/System/Library/Frameworks/IOKit.framework/Headers"
-        )
-
-# Required for linking MacOSX libraries
 target_link_libraries(${PROJECT_NAME} PUBLIC
-        "-framework CoreFoundation"
         "-framework ApplicationServices"
+        "-framework CoreFoundation"
+        "-framework Foundation"             # Required for Objective-C
         )
 
 # -----------------------------------------------------------------
-#   Precompiled header(s)
+#   Precompiled Header(s)
 # -----------------------------------------------------------------
 target_precompile_headers(${PROJECT_NAME} PRIVATE "${PROJECT_SOURCE_DIR}/pblpch.h")
