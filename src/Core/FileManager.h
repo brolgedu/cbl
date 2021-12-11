@@ -1,16 +1,16 @@
 #pragma once
 
-#include "SysDirEnums.h"
+#include <Foundation/NSPathUtilities.h>
 
-namespace PBL {
+namespace CBL {
 
     class FileManager {
     public:
         FileManager();
         ~FileManager();
 
-        const char *PathForDirectory(SearchPathDirectory directory, SearchPathDomainMask domainMask);
-        const char *PathForDirectoryForItemAtPath(SearchPathDirectory directory, SearchPathDomainMask domainMask,
+        const char *PathForDirectory(NSSearchPathDirectory directory, NSSearchPathDomainMask domainMask);
+        const char *PathForDirectoryForItemAtPath(NSSearchPathDirectory directory, NSSearchPathDomainMask domainMask,
                                                   const char *itemPath, bool create = false);
 
     private:

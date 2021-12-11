@@ -1,7 +1,7 @@
 #include "FileManager.h"
 #import <Foundation/Foundation.h>
 
-namespace PBL {
+namespace CBL {
 
     FileManager::FileManager() {
         mAutoreleasePool = [[NSAutoreleasePool alloc] init];
@@ -11,10 +11,10 @@ namespace PBL {
         [(NSAutoreleasePool *) mAutoreleasePool release];
     }
 
-    const char *FileManager::PathForDirectory(SearchPathDirectory directory, SearchPathDomainMask domainMask) {
+    const char *FileManager::PathForDirectory(NSSearchPathDirectory directory, NSSearchPathDomainMask domainMask) {
         NSFileManager *fileManager = [NSFileManager defaultManager];
-        NSArray *URLs = [fileManager URLsForDirectory:(NSSearchPathDirectory) directory
-                                            inDomains:(NSSearchPathDomainMask) domainMask];
+        NSArray *URLs = [fileManager URLsForDirectory:directory
+                                            inDomains:domainMask];
         if (URLs.count == 0) {
             return NULL;
         }
@@ -26,16 +26,16 @@ namespace PBL {
         return path.fileSystemRepresentation;
     }
 
-    const char *FileManager::PathForDirectoryForItemAtPath(SearchPathDirectory directory,
-                                                           SearchPathDomainMask domainMask,
+    const char *FileManager::PathForDirectoryForItemAtPath(NSSearchPathDirectory directory,
+                                                           NSSearchPathDomainMask domainMask,
                                                            const char *itemPath, bool create) {
 
         NSFileManager *fileManager = [NSFileManager defaultManager];
         NSString *nsPath = [fileManager stringWithFileSystemRepresentation:itemPath length:strlen(itemPath)];
         NSURL *itemURL = (nsPath ? [NSURL fileURLWithPath:nsPath] : nil);
 
-        NSURL *URL = [fileManager URLForDirectory:(NSSearchPathDirectory) directory
-                                         inDomain:(NSSearchPathDomainMask) domainMask
+        NSURL *URL = [fileManager URLForDirectory:directory
+                                         inDomain:domainMask
                                 appropriateForURL:itemURL
                                            create:create error:NULL];
 

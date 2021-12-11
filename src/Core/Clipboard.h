@@ -1,26 +1,21 @@
 #pragma once
 
-#include "pblpch.h"
+#include "cblpch.h"
 
 #include <Carbon/Carbon.h> // Use old API to avoid need for separate .mm file
 
-namespace PBL {
+namespace CBL {
 
-    class PblManager {
+    class Clipboard {
     public:
-        PblManager();
-        ~PblManager();
+        Clipboard();
+        ~Clipboard();
 
         bool UpdateClipboardText();
 
         const std::string GetClipboardText();
         const unsigned long GetItemCount();
         const char GetKeyEvent(const char key);
-
-    private:
-        std::vector<char> mClipboardText;
-        std::vector<char> mClipboardHandlerData;
-        bool mTextChanged;
 
     private:
         struct _PblLibraryNS {
@@ -31,7 +26,12 @@ namespace PBL {
             PasteboardItemID itemId;
         };
 
+    private:
         _PblLibraryNS ns;
+        bool mTextChanged;
+        std::vector<char> mClipboardText;
+        std::vector<char> mClipboardHandlerData;
+
 
     };
 

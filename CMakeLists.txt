@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.20)
-project(pbl LANGUAGES C CXX OBJC OBJCXX)
+project(cbl LANGUAGES C CXX OBJC OBJCXX)
 
 # -----------------------------------------------------------------
 #   CMake Variables
@@ -11,6 +11,7 @@ set(CMAKE_RUNTIME_OUTPUT_DIRECTORY "${CMAKE_CURRENT_LIST_DIR}/bin")
 # -----------------------------------------------------------------
 #   Local Variables
 # -----------------------------------------------------------------
+set(PROJECT_ENABLE_TESTS 0)
 set(PROJECT_SOURCE_DIR "${CMAKE_CURRENT_LIST_DIR}/src")
 
 # -----------------------------------------------------------------
@@ -23,7 +24,22 @@ file(GLOB_RECURSE PROJECT_SOURCES
         )
 
 # We do not want to include duplicates
-list(REMOVE_ITEM PROJECT_SOURCES "${PROJECT_SOURCE_DIR}/pblpch.h")
+list(REMOVE_ITEM PROJECT_SOURCES
+        "${PROJECT_SOURCE_DIR}/cblpch.h")
+
+# -----------------------------------------------------------------
+#   Testing Sources (if enabled)
+# -----------------------------------------------------------------
+if (PROJECT_ENABLE_TESTS)
+    # Include test sources
+    list(APPEND PROJECT_SOURCES
+            "modules/tests/FileSystem/fileManager_directories_test.mm"
+            )
+
+    # Remove program entry point from main program if necessary
+    list(REMOVE_ITEM PROJECT_SOURCES
+            "${PROJECT_SOURCE_DIR}/main.cpp")
+endif ()
 
 # -----------------------------------------------------------------
 #   Create Executable
@@ -49,4 +65,4 @@ target_link_libraries(${PROJECT_NAME} PUBLIC
 # -----------------------------------------------------------------
 #   Precompiled Header(s)
 # -----------------------------------------------------------------
-target_precompile_headers(${PROJECT_NAME} PRIVATE "${PROJECT_SOURCE_DIR}/pblpch.h")
+target_precompile_headers(${PROJECT_NAME} PRIVATE "${PROJECT_SOURCE_DIR}/cblpch.h")

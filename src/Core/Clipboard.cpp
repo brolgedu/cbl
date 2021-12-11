@@ -1,20 +1,20 @@
-#include "pbl.h"
+#include "Clipboard.h"
 
-namespace PBL {
+namespace CBL {
 
     static PasteboardRef sMainClipboard = 0;
 
-    PblManager::PblManager()
+    Clipboard::Clipboard()
             : mTextChanged(true) {
         UpdateClipboardText();
     }
 
-    PblManager::~PblManager() {
+    Clipboard::~Clipboard() {
         CFRelease(ns.CFData);
         CFRelease(ns.flavorTypeArray);
     }
 
-    bool PblManager::UpdateClipboardText() {
+    bool Clipboard::UpdateClipboardText() {
         if (!sMainClipboard) {
             PasteboardCreate(kPasteboardClipboard, &sMainClipboard);
         }
@@ -52,18 +52,18 @@ namespace PBL {
         return false;
     }
 
-    const std::string PblManager::GetClipboardText() {
+    const std::string Clipboard::GetClipboardText() {
         return mClipboardText.data();
     }
 
-    const unsigned long PblManager::GetItemCount() {
+    const unsigned long Clipboard::GetItemCount() {
         return ns.itemCount;
     }
 
-    const char PblManager::GetKeyEvent(const char key) {
+    const char Clipboard::GetKeyEvent(const char key) {
         return CGEventSourceKeyState(ns.eventSourceStateID, key);
     }
 
-} // namespace PBL
+} // namespace CBL
 
 
