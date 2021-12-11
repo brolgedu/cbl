@@ -20,6 +20,7 @@ set(PROJECT_SOURCE_DIR "${CMAKE_CURRENT_LIST_DIR}/src")
 file(GLOB_RECURSE PROJECT_SOURCES
         "${PROJECT_SOURCE_DIR}/*.h"
         "${PROJECT_SOURCE_DIR}/*.cpp"
+        "${PROJECT_SOURCE_DIR}/*.m"
         "${PROJECT_SOURCE_DIR}/*.mm"
         )
 
@@ -33,7 +34,7 @@ list(REMOVE_ITEM PROJECT_SOURCES
 if (PROJECT_ENABLE_TESTS)
     # Include test sources
     list(APPEND PROJECT_SOURCES
-            "modules/tests/FileSystem/fileManager_directories_test.mm"
+            "modules/tests/FileSystem/directories_test.mm"
             )
 
     # Remove program entry point from main program if necessary
