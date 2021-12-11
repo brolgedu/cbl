@@ -1,5 +1,5 @@
 #import <Core/Clipboard.h>
-#import <Core/FileManager.h>
+#import <Core/FileSystem.h>
 
 int main(int argc, char *argv[]) {
     char *filePath = NULL;

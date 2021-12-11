@@ -1,17 +1,18 @@
-#include "FileManager.h"
+#import "FileSystem.h"
+
 #import <Foundation/Foundation.h>
 
 namespace CBL {
 
-    FileManager::FileManager() {
+    FileSystem::FileSystem() {
         mAutoreleasePool = [[NSAutoreleasePool alloc] init];
     }
 
-    FileManager::~FileManager() {
+    FileSystem::~FileSystem() {
         [(NSAutoreleasePool *) mAutoreleasePool release];
     }
 
-    const char *FileManager::PathForDirectory(NSSearchPathDirectory directory, NSSearchPathDomainMask domainMask) {
+    const char *FileSystem::PathForDirectory(NSSearchPathDirectory directory, NSSearchPathDomainMask domainMask) {
         NSFileManager *fileManager = [NSFileManager defaultManager];
         NSArray *URLs = [fileManager URLsForDirectory:directory
                                             inDomains:domainMask];
@@ -26,7 +27,7 @@ namespace CBL {
         return path.fileSystemRepresentation;
     }
 
-    const char *FileManager::PathForDirectoryForItemAtPath(NSSearchPathDirectory directory,
+    const char *FileSystem::PathForDirectoryForItemAtPath(NSSearchPathDirectory directory,
                                                            NSSearchPathDomainMask domainMask,
                                                            const char *itemPath, bool create) {
 

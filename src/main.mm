@@ -1,4 +1,6 @@
+
 #include "Core/Clipboard.h"
+#include "Core/FileManager.h"
 
 #include <iostream>
 #include <thread>
