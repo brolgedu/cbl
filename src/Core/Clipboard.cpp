@@ -14,6 +14,20 @@ namespace CBL {
         CFRelease(ns.flavorTypeArray);
     }
 
+    void Clipboard::SetClipboardText(const char *text) {
+        if (!sMainClipboard) {
+            PasteboardCreate(kPasteboardClipboard, &sMainClipboard);
+        }
+
+        PasteboardClear(sMainClipboard);
+        ns.CFData = CFDataCreate(kCFAllocatorDefault, (const UInt8 *) text, strlen(text));
+        if (ns.CFData) {
+            PasteboardPutItemFlavor(sMainClipboard, (PasteboardItemID) 1, CFSTR("public.utf8-plain-text"),
+                                    ns.CFData, 0);
+            CFRelease(ns.CFData);
+        }
+    }
+
     bool Clipboard::UpdateClipboardText() {
         if (!sMainClipboard) {
             PasteboardCreate(kPasteboardClipboard, &sMainClipboard);

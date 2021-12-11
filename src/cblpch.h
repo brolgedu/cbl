@@ -1,7 +1,7 @@
 #pragma once
 
 // -----------------------------------------------------------------
-//  std Namespace Headers
+//  stdlib Headers
 // -----------------------------------------------------------------
 #include <iostream>
 #include <vector>

@@ -13,6 +13,7 @@ namespace CBL {
 
         bool UpdateClipboardText();
 
+        void SetClipboardText(const char *text);
         const std::string GetClipboardText();
         const unsigned long GetItemCount();
         const char GetKeyEvent(const char key);
@@ -31,7 +32,6 @@ namespace CBL {
         bool mTextChanged;
         std::vector<char> mClipboardText;
         std::vector<char> mClipboardHandlerData;
-
 
     };
 
