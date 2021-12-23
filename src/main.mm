@@ -1,13 +1,21 @@
-
-#include "Core/Clipboard.h"
-#include "Core/FileSystem.h"
+#include "objc/objc.h"
+#include "Core/CBLClipboard.h"
+#include "Core/CBLFileSystem.h"
 
 #include <iostream>
 #include <thread>
 #include <chrono>
+#include <ctime>
 
+class CBLFileSystem;
 
-bool pollKeyEvent(CBL::Clipboard &clipboard, const char key, unsigned int wait_time_ms) {
+static const char *getCurrentTime() {
+    char buffer[50];
+    std::time_t seed = std::time(nullptr);
+    return reinterpret_cast<const char *>(sprintf(buffer, "%s", std::asctime(std::localtime(&seed))));
+}
+
+bool pollKeyEvent(CBLClipboard &clipboard, const char key, unsigned int wait_time_ms) {
     unsigned int cycle = 4;
     unsigned int sleep = wait_time_ms / cycle;
 
@@ -22,15 +30,19 @@ bool pollKeyEvent(CBL::Clipboard &clipboard, const char key, unsigned int wait_t
 
 int main(int argc, char *argv[]) {
     // if (std::strcmp(argv[1], "start") == 0) { // Used to invoke the program
-    std::cout << ">>> This was called from main()!\n";
-
-    CBL::Clipboard cb;
+    CBLClipboard cb;
+    CBLFileSystem *fs = fs->init;
     bool running = true;
     char escKey = 0x35;     // CGKeyCode::ESC
+    const char *clipboardText = cb.GetClipboardText();
+    if (![fs FileExistsAtPath:fs.GetFilePath]) {
+        assert([fs CreateFileAtPath:fs.GetFilePath :getCurrentTime()]);
+
+    }
 
     while (running) {
         if (cb.UpdateClipboardText()) {
-            std::cout << cb.GetClipboardText() << std::flush << std::endl;
+
         }
 
         // End loop if specified key is pressed

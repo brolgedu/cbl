@@ -12,6 +12,7 @@ set(CMAKE_RUNTIME_OUTPUT_DIRECTORY "${CMAKE_CURRENT_LIST_DIR}/bin")
 #   Local Variables
 # -----------------------------------------------------------------
 set(PROJECT_ENABLE_TESTS 0)
+set(PROJECT_ENABLE_DEBUG 1)
 set(PROJECT_SOURCE_DIR "${CMAKE_CURRENT_LIST_DIR}/src")
 
 # -----------------------------------------------------------------
@@ -20,7 +21,6 @@ set(PROJECT_SOURCE_DIR "${CMAKE_CURRENT_LIST_DIR}/src")
 file(GLOB_RECURSE PROJECT_SOURCES
         "${PROJECT_SOURCE_DIR}/*.h"
         "${PROJECT_SOURCE_DIR}/*.cpp"
-        "${PROJECT_SOURCE_DIR}/*.m"
         "${PROJECT_SOURCE_DIR}/*.mm"
         )
 
@@ -34,12 +34,15 @@ list(REMOVE_ITEM PROJECT_SOURCES
 if (PROJECT_ENABLE_TESTS)
     # Include test sources
     list(APPEND PROJECT_SOURCES
-            "modules/tests/FileSystem/directories_test.mm"
+            "modules/tests/file_system/file_system_test.mm"
+            #            "modules/tests/folder_manager/folder_manager_test.mm"
             )
 
     # Remove program entry point from main program if necessary
     list(REMOVE_ITEM PROJECT_SOURCES
-            "${PROJECT_SOURCE_DIR}/main.cpp")
+            "${PROJECT_SOURCE_DIR}/main.cpp"
+            "${PROJECT_SOURCE_DIR}/main.mm"
+            )
 endif ()
 
 # -----------------------------------------------------------------
@@ -62,6 +65,11 @@ target_link_libraries(${PROJECT_NAME} PUBLIC
         "-framework CoreFoundation"
         "-framework Foundation"             # Required for Objective-C
         )
+
+if (PROJECT_ENABLE_DEBUG)
+    target_compile_definitions(${PROJECT_NAME} PUBLIC CBL_DEBUG=1)
+endif ()
+
 
 # -----------------------------------------------------------------
 #   Precompiled Header(s)
