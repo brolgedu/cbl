@@ -11,6 +11,6 @@
 //  MacOSX Headers
 // -----------------------------------------------------------------
 #include <objc/objc.h>
-
-#include <ApplicationServices/ApplicationServices.h>
+#include <CoreGraphics/CoreGraphics.h>
 #include <CoreFoundation/CoreFoundation.h>
+#include <ApplicationServices/ApplicationServices.h>
