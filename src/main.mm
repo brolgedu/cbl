@@ -1,57 +1,71 @@
-#include "objc/objc.h"
-#include "Core/CBLClipboard.h"
-#include "Core/CBLFileSystem.h"
+#include <cbl.h>
 
-#include <iostream>
-#include <thread>
-#include <chrono>
-#include <ctime>
+#import <Foundation/Foundation.h>
 
-class CBLFileSystem;
+// Use for testing functions
+const bool TEST_TAILFILE = 1;
+const bool TEST_READFILESTREAM = 0;
 
-static const char *getCurrentTime() {
-    char buffer[50];
-    std::time_t seed = std::time(nullptr);
-    return reinterpret_cast<const char *>(sprintf(buffer, "%s", std::asctime(std::localtime(&seed))));
-}
+enum {
+    TERMINATE_PROGRAM = 0,
+    RUN_TAIL
+};
 
-bool pollKeyEvent(CBLClipboard &clipboard, const char key, unsigned int wait_time_ms) {
-    unsigned int cycle = 4;
-    unsigned int sleep = wait_time_ms / cycle;
-
-    for (unsigned int i = 0; i < cycle; ++i) {
-        if (clipboard.GetKeyEvent(key)) {
-            return true;
-        }
-        std::this_thread::sleep_for(std::chrono::milliseconds(sleep));
-    }
-    return false;
+int getCLIArgs() {
+    return 0;
 }
 
 int main(int argc, char *argv[]) {
     // if (std::strcmp(argv[1], "start") == 0) { // Used to invoke the program
-    CBLClipboard cb;
-    CBLFileSystem *fs = fs->init;
-    bool running = true;
-    char escKey = 0x35;     // CGKeyCode::ESC
-    const char *clipboardText = cb.GetClipboardText();
-    if (![fs FileExistsAtPath:fs.GetFilePath]) {
-        assert([fs CreateFileAtPath:fs.GetFilePath :getCurrentTime()]);
 
-    }
+    auto pool = [[NSAutoreleasePool alloc] init];
+    auto cb = [[CBLClipboard alloc] init];
+    auto fs = [[CBLFileSystem alloc] init];
+    CBLTime time;
+
+    bool running = true;
+    char *filePath = (char *) ([fs GetFilePath]);
 
     while (running) {
-        if (cb.UpdateClipboardText()) {
+        if ([cb UpdateClipboardText]) {
+            const char *clipboard_text = [cb GetClipboardText];
+            if ([fs AppendFileAtPathWithContent:filePath :clipboard_text]) {
+
+                if (TEST_TAILFILE) {
+                    [fs TailFile:filePath];
+                }
+            }
+
+            if (TEST_READFILESTREAM) {
+                [fs ReadFileStream:filePath];
+            }
 
         }
 
-        // End loop if specified key is pressed
-        running = !pollKeyEvent(cb, escKey, 400);
+        time.Sleep(333);
+
+
+        //     // TODO: Listen for any args passed to program while the program is running.
+        //     switch (getCLIArgs()) {
+        //         case TERMINATE_PROGRAM: break;
+        //     }
+        //
+        //
+        // }
+
+
+        // FIXME: Ignore this for now. It probably won't be needed anyway.
+        // int key = PollKeyEvent(cb, 400, CBL_KEYCODE_ESC, CBL_KEYCODE_F, CBL_KEYCODE_T);
+        // switch (key) {
+        //     case CBL_KEYCODE_ESC: running = false;
+        //         break;
+        //     case CBL_KEYCODE_F:[fs ReadFileStream:filePath];
+        //         break;
+        //     case CBL_KEYCODE_T:[fs TailFile:filePath];
+        //         break;
+        // }
 
     }
 
-
-
-    // }
-
+    [(NSAutoreleasePool *) pool release];
 }
