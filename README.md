@@ -1,2 +1,2 @@
-## pbl
-Pasteboard List
+## cbl
+Clipboard List
