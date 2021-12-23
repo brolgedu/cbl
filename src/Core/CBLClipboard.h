@@ -2,37 +2,34 @@
 
 #include "cblpch.h"
 
-#include <Carbon/Carbon.h> // Use old API to avoid need for separate .mm file
+#ifdef __cplusplus
+extern "C" {
+#endif
 
-namespace CBL {
+@interface CBLClipboard : NSObject {
 
-    class Clipboard {
-    public:
-        Clipboard();
-        ~Clipboard();
+@private
+    void *mAutoreleasePool;
 
-        bool UpdateClipboardText();
+    CGEventSourceStateID mEventSourceStateID;
+    PasteboardItemID mItemId;
+    CFDataRef mCFData;
 
-        void SetClipboardText(const char *text);
-        const std::string GetClipboardText();
-        const unsigned long GetItemCount();
-        const char GetKeyEvent(const char key);
+    std::vector<char> mClipboardHandlerData;
+    std::vector<char> mClipboardText;
+    bool mTextChanged;
+}
 
-    private:
-        struct _PblLibraryNS {
-            CGEventSourceStateID eventSourceStateID;
-            CFDataRef CFData;
-            CFArrayRef flavorTypeArray;
-            ItemCount itemCount;
-            PasteboardItemID itemId;
-        };
+- (id)init;
+- (void)dealloc;
 
-    private:
-        _PblLibraryNS ns;
-        bool mTextChanged;
-        std::vector<char> mClipboardText;
-        std::vector<char> mClipboardHandlerData;
+- (bool)UpdateClipboardText;
+- (void)SetClipboardText:(const char *)text;
+- (const char *)GetClipboardText;
+- (const char)GetKeyEvent:(const char)key;
 
-    };
+@end
 
-} // namespace PB
+#ifdef __cplusplus
+}
+#endif
