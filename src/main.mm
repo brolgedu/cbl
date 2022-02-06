@@ -21,15 +21,14 @@ int main(int argc, char *argv[]) {
     auto pool = [[NSAutoreleasePool alloc] init];
     auto cb = [[CBLClipboard alloc] init];
     auto fs = [[CBLFileSystem alloc] init];
-    CBLTime time;
-
+    NSString *filePath = [fs GetFilePath];
     bool running = true;
-    char *filePath = (char *) ([fs GetFilePath]);
+    CBLTime time;
 
     while (running) {
         if ([cb UpdateClipboardText]) {
-            const char *clipboard_text = [cb GetClipboardText];
-            if ([fs AppendFileAtPathWithContent:filePath :clipboard_text]) {
+            NSString *clipboard_text = [NSString stringWithCString:[cb GetClipboardText]];
+            if ([fs AppendFileAtPathWithContents:filePath :clipboard_text]) {
 
                 if (TEST_TAILFILE) {
                     [fs TailFile:filePath];

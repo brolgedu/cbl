@@ -12,8 +12,8 @@
 extern "C" {
 #endif
 
-typedef unsigned long long ULONG;
-typedef unsigned int UINT;
+typedef unsigned long ul;
+typedef unsigned int uint;
 
 @interface CBLFileSystem : NSObject {
 
@@ -25,54 +25,50 @@ typedef unsigned int UINT;
     NSFileManager *mFileManager;
     NSFileHandle *mFileHandle;
 
-    NSMutableString *mFilePath;
+    NSMutableString *mFilepath;
     NSMutableString *mFileName;
 
     NSString *mCBLDirectory;
     NSString *mAppSupportDirectory;
     NSString *mCBLHistoryDirectory;
 
-    ULONG mFileContentsLength;
-    ULONG mLengthOfLastWrite;
+    ul mFileContentsLength;
+    ul mLengthOfLastWrite;
 
-    UINT mNumberOfEntries;
+    uint mNumberOfEntries;
 }
 
 - (id)init;
 - (void)dealloc;
 
-- (const char *)GetFilePath;
-- (const char *)GetDirectoryPath:(const char *)filePath;
-- (const char *)NSGetPathForDirectory:(NSSearchPathDirectory)directory :(NSSearchPathDomainMask)domainMask;
+- (NSString *)GetFilePath;
+- (NSString *)GetDirectoryPath:(NSString *)filePath;
+- (NSString *)NSGetPathForDirectory:(NSSearchPathDirectory)directory :(NSSearchPathDomainMask)domainMask;
 
-- (void)TailFile:(const char *)filePath;
-- (const char *)ReadFileStream:(const char *)filePath;
-- (const char *)GetContentsOfFileAtPath:(const char *)filePath;
+- (void)TailFile:(NSString *)filePath;
+- (NSString *)ReadFileStream:(NSString *)filePath;
+- (NSString *)GetContentsOfFileAtPath:(NSString *)filePath;
 
-- (bool)CreateDirectoryAtPath:(const char *)directoryPath;
-- (bool)CreateFileAtPath:(const char *)filePathDirectory :(const char *)fileName :(const char *)contents;
-- (bool)CreateFileAtPath:(const char *)filePath :(const char *)contents;
-- (bool)CreateFileAtPath:(const char *)filePath;
+- (bool)CreateDirectoryAtPath:(NSString *)directoryPath;
+- (bool)CreateFileAtPathWithContents:(NSString *)filePathDirectory :(NSString *)fileName :(NSString *)contents;
+- (bool)CreateFileAtPathWithContents:(NSString *)filePath :(NSString *)contents;
+- (bool)CreateFileAtPath:(NSString *)filePath;
 - (bool)CreateFileAtDefaultPath;
 
-- (bool)OpenFileAtPath:(const char *)filePath;
-- (bool)FileExistsAtPath:(const char *)filePath;
-- (bool)RemoveTextFromFileAtPath:(const char *)filePath :(const char *)contents;
-- (bool)AppendFileAtPathWithContent:(const char *)filePath :(const char *)contents;
-- (bool)OverwriteFileAtPathWithContent:(const char *)filePath :(const char *)contents;
+- (bool)OpenFileAtPath:(NSString *)filePath;
+- (bool)FileExistsAtPath:(NSString *)filePath;
+- (bool)AppendFileAtPathWithContents:(NSString *)filePath :(NSString *)contents;
+- (bool)OverwriteFileAtPathWithContents:(NSString *)filePath :(NSString *)contents;
 
-- (ULONG)GetFileContentsLength;
-
+- (ul)GetFileContentsLength;
 
 //////////////////////////////////////////////////////////
 //                  Helper Functions                    //
 //////////////////////////////////////////////////////////
 
-- (NSString *)CStringToNSString:(const char *)cString;
-- (const char *)NSStringToCString:(NSString *)nsString;
-
-- (const char*)WrapTimeStamp:(const char *)contents;
-- (const char *)RemoveLeadingWhiteSpace:(const char *)contents;
+- (NSString *)GetTimeStamp;
+- (NSString *)AppendEndline:(NSString *)nsString;
+- (NSString *)TrimString:(NSString *)nsString;
 
 
 @end
