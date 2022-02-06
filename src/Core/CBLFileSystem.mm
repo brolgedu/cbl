@@ -276,51 +276,6 @@
     return success;
 }
 
-// - (bool)AppendFileAtPathWithContent:(NSString *)
-//         filepath :(NSString *)contents {
-//     NSError *error = nil;
-//
-//     if (filepath ) {
-//         CBLLog(@"[AppendFileAtPathWithContent]: Invalid filepath!");
-//         error = [NSError alloc];
-//     } else {
-//         if (![self FileExistsAtPath:filepath]) { // File was deleted during program
-//             // execution.
-//             [self CreateFileAtPath:filepath :contents];
-//         } else if (![mFileManager
-//                 isWritableFileAtPath:[self CStringToNSString:filepath]]) {
-//             CBLLog(@"[AppendFileAtPathWithContent]: Cannot write to file!");
-//             error = [NSError alloc];
-//         } else {
-//             NSString *textToWrite = [[NSString alloc] initWithCString:[self WrapTimeStamp:contents] encoding:NSUTF8StringEncoding];
-//             NSData *dataToWrite =
-//                     [NSData dataWithBytes:[self NSStringToCString:textToWrite]
-//                                    length:textToWrite.length];
-//             CBLLog(@"[CreateFileAtPath]: textToWrite.length == %lu",
-//                    (ul) textToWrite.length);
-//
-//             if ([self OpenFileAtPath:filepath]) {
-//                 [mFileHandle seekToEndOfFile];
-//
-//                 if ([mFileHandle writeData:dataToWrite error:&error]) {
-//                     mLengthOfLastWrite = dataToWrite ? dataToWrite.length : 0;
-//                     mFileContentsLength += mLengthOfLastWrite;
-//                     CBLLog(@"[AppendFileAtPathWithContent]: Write successful!");
-//                 } else {
-//                     CBLLog(@"[AppendFileAtPathWithContent]: Error writing to file: %@",
-//                            error);
-//                 }
-//
-//                 [mFileHandle closeFile];
-//             } else {
-//                 CBLLog(@"[AppendFileAtPathWithContent]: Could not open file!");
-//             }
-//         }
-//     }
-//
-//     return !error;
-// }
-
 - (bool)RemoveTextFromFileAtPath:(NSString *)filepath :(NSString *)contents {
     // [mFileHandle truncateFileAtOffset:data.length]; // This will shrink the
     // file if data was removed

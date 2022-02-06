@@ -57,7 +57,6 @@ typedef unsigned int uint;
 
 - (bool)OpenFileAtPath:(NSString *)filePath;
 - (bool)FileExistsAtPath:(NSString *)filePath;
-- (NSString*)ReadTextFromFileWithFormat:(NSString *)format;
 - (bool)AppendFileAtPathWithContents:(NSString *)filePath :(NSString *)contents;
 - (bool)OverwriteFileAtPathWithContents:(NSString *)filePath :(NSString *)contents;
 
