@@ -30,7 +30,7 @@ static PasteboardRef sMainClipboard = nil;
     }
 
     PasteboardClear(sMainClipboard);
-    mCFData = CFDataCreate(kCFAllocatorDefault, (const UInt8 *) text, strlen(text));
+    mCFData = CFDataCreate(kCFAllocatorDefault, (const UInt8 *) text, (long) strlen(text));
     if (mCFData) {
         PasteboardPutItemFlavor(sMainClipboard, (PasteboardItemID) 1, CFSTR("public.utf8-plain-text"),
                                 mCFData, 0);
@@ -48,9 +48,9 @@ static PasteboardRef sMainClipboard = nil;
     PasteboardGetItemCount(sMainClipboard, &itemCount);
     for (ItemCount i = 0; i < itemCount; i++) {
         mItemId = nil;
-        PasteboardGetItemIdentifier(sMainClipboard, i + 1, &mItemId);
+        PasteboardGetItemIdentifier(sMainClipboard, (long) i + 1, &mItemId);
 
-        CFArrayRef flavorTypeArray = 0;
+        CFArrayRef flavorTypeArray = nil;
         PasteboardCopyItemFlavors(sMainClipboard, mItemId, &flavorTypeArray);
 
         mTextChanged = false;
@@ -76,7 +76,6 @@ static PasteboardRef sMainClipboard = nil;
         }
     }
 
-
     return mTextChanged;
 }
 
@@ -85,7 +84,7 @@ static PasteboardRef sMainClipboard = nil;
 }
 
 - (const char)GetKeyEvent:(const char)key {
-    return CGEventSourceKeyState(mEventSourceStateID, key);
+    return (const char) CGEventSourceKeyState(mEventSourceStateID, key);
 }
 
 @end

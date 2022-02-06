@@ -60,16 +60,19 @@ target_include_directories(${PROJECT_NAME} PUBLIC
 # -----------------------------------------------------------------
 #   MacOSX Libraries
 # -----------------------------------------------------------------
-target_link_libraries(${PROJECT_NAME} PUBLIC
+target_link_libraries(${PROJECT_NAME} PRIVATE
         "-framework ApplicationServices"
         "-framework CoreFoundation"
         "-framework Foundation"             # Required for Objective-C
         )
 
-if (PROJECT_ENABLE_DEBUG)
-    target_compile_definitions(${PROJECT_NAME} PUBLIC CBL_DEBUG=1)
-endif ()
+# Work-around for "does not return NSSTRING" xcode13 commandline tools compile error
+target_compile_options(${PROJECT_NAME} PRIVATE "-DNS_FORMAT_ARGUMENT(A)=")
 
+if (PROJECT_ENABLE_DEBUG)
+    target_compile_definitions(${PROJECT_NAME} PUBLIC
+            CBL_DEBUG=1)
+endif ()
 
 # -----------------------------------------------------------------
 #   Precompiled Header(s)
