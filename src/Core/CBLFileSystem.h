@@ -5,6 +5,7 @@
 #import <Foundation/NSPathUtilities.h>
 #import <Foundation/NSFileManager.h>
 #import <Foundation/NSFileHandle.h>
+#import <Foundation/NSDateFormatter.h>
 
 #import <memory>
 
@@ -24,6 +25,7 @@ typedef unsigned int uint;
 
     NSFileManager *mFileManager;
     NSFileHandle *mFileHandle;
+    NSDateFormatter *mDateFormatter;
 
     NSMutableString *mFilepath;
     NSMutableString *mFileName;
@@ -48,7 +50,9 @@ typedef unsigned int uint;
 - (void)TailFile:(NSString *)filePath;
 - (NSString *)ReadFileStream:(NSString *)filePath;
 - (NSString *)GetContentsOfFileAtPath:(NSString *)filePath;
+- (NSData *)GetDataFromContents:(NSString *)contents;
 
+- (bool)WriteData:(NSData*) data;
 - (bool)CreateDirectoryAtPath:(NSString *)directoryPath;
 - (bool)CreateFileAtPathWithContents:(NSString *)filePathDirectory :(NSString *)fileName :(NSString *)contents;
 - (bool)CreateFileAtPathWithContents:(NSString *)filePath :(NSString *)contents;
@@ -60,16 +64,10 @@ typedef unsigned int uint;
 - (bool)AppendFileAtPathWithContents:(NSString *)filePath :(NSString *)contents;
 - (bool)OverwriteFileAtPathWithContents:(NSString *)filePath :(NSString *)contents;
 
-- (ul)GetFileContentsLength;
-
-//////////////////////////////////////////////////////////
-//                  Helper Functions                    //
-//////////////////////////////////////////////////////////
-
 - (NSString *)GetTimeStamp;
 - (NSString *)AppendEndline:(NSString *)nsString;
 - (NSString *)TrimString:(NSString *)nsString;
-
+- (ul)GetFileContentsLength;
 
 @end
 

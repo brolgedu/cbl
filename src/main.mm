@@ -22,12 +22,14 @@ int main(int argc, char *argv[]) {
     auto cb = [[CBLClipboard alloc] init];
     auto fs = [[CBLFileSystem alloc] init];
     NSString *filePath = [fs GetFilePath];
+    NSString *clipboard_text = nil;
     bool running = true;
     CBLTime time;
 
     while (running) {
         if ([cb UpdateClipboardText]) {
-            NSString *clipboard_text = [NSString stringWithCString:[cb GetClipboardText]];
+            clipboard_text = [[NSMutableString stringWithCString:[cb GetClipboardText]
+                                                        encoding:NSUTF8StringEncoding] mutableCopy];
             if ([fs AppendFileAtPathWithContents:filePath :clipboard_text]) {
 
                 if (TEST_TAILFILE) {
