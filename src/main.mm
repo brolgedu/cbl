@@ -16,12 +16,15 @@ int getCLIArgs() {
 }
 
 int main(int argc, char *argv[]) {
+
     auto pool = [[NSAutoreleasePool alloc] init];
     auto cb = [[CBLClipboard alloc] init];
     auto fs = [[CBLFileSystem alloc] init];
+    CBLTime time;
+
     NSString *filePath = [fs GetFilePath];
     NSString *clipboard_text = nil;
-    CBLTime time;
+
     bool running = true;
 
     while (running) {
