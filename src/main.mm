@@ -16,17 +16,16 @@ int getCLIArgs() {
 }
 
 int main(int argc, char *argv[]) {
-    // if (std::strcmp(argv[1], "start") == 0) { // Used to invoke the program
-
     auto pool = [[NSAutoreleasePool alloc] init];
     auto cb = [[CBLClipboard alloc] init];
     auto fs = [[CBLFileSystem alloc] init];
     NSString *filePath = [fs GetFilePath];
     NSString *clipboard_text = nil;
-    bool running = true;
     CBLTime time;
+    bool running = true;
 
     while (running) {
+
         if ([cb UpdateClipboardText]) {
             clipboard_text = [[NSMutableString stringWithCString:[cb GetClipboardText]
                                                         encoding:NSUTF8StringEncoding] mutableCopy];
@@ -67,6 +66,5 @@ int main(int argc, char *argv[]) {
         // }
 
     }
-
     [(NSAutoreleasePool *) pool release];
 }

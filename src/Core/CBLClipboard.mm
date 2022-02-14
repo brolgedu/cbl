@@ -10,11 +10,9 @@
 static PasteboardRef sMainClipboard = nil;
 
 - (id)init {
-    mAutoreleasePool = [[NSAutoreleasePool alloc] init];
-
     self = [super init];
+    mAutoreleasePool = [[NSAutoreleasePool alloc] init];
     [self UpdateClipboardText];
-
     return self;
 }
 

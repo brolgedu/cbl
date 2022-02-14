@@ -1,5 +1,4 @@
 #import "CBLFileSystem.h"
-#import "cblpch.h"
 
 #import "Core/Core.h"
 
@@ -16,20 +15,8 @@
     mFileManager = [NSFileManager defaultManager];
     mFileHandle = [[NSFileHandle alloc] init];
 
-    // Create file directory tree
-    mAppSupportDirectory = [self NSGetPathForDirectory:NSApplicationSupportDirectory :NSUserDomainMask];
-    mCBLDirectory = [mAppSupportDirectory stringByAppendingPathComponent:@"/cbl"];
-    mCBLHistoryDirectory = [mCBLDirectory stringByAppendingPathComponent:@"/history"];
-
-    // Create filename appended with current date
-    [mDateFormatter setDateFormat:@"MM-dd-yyyy"];
-    NSString *currentDate = [mDateFormatter stringFromDate:[NSDate now]];
-    NSString *filename = [NSString stringWithFormat:@"history-%@.txt", currentDate];
-    CBLog(@"[currentDate]: %@", currentDate);
-
-    mFileName = [filename mutableCopy];
-    mFilepath = [[NSMutableString stringWithFormat:@"%@/%@", mCBLHistoryDirectory, filename] mutableCopy];
-    CBLog(@"[mFilepath]: %@", mFilepath);
+    [self SetDefaultDirectory];
+    [self SetDefaultFileNameAndPath];
 
     // Create file
     NSCAssert([self CreateFileAtDefaultPath], @"[CreateFileAtDefaultPath]: Error creating file!");
@@ -52,16 +39,55 @@
 }
 
 - (NSString *)GetFilePath {
-    return mFilepath;
+    return mFilePath;
+}
+
+- (bool)SetFilePath:(NSString *)filepath {
+    if (!filepath) { return false; }
+    mFilePath = [filepath mutableCopy];
+    CBLog(@"[SetFilePath]: %@", mFilePath);
+    return true;
+}
+
+- (NSString *)GetFileName {
+    return mFileName;
+}
+
+- (void)SetDefaultDirectory {
+    NSString *cblFolder = @"cbl";
+    NSString *cblHistoryFolder = @"history";
+
+    // Create file directory tree
+    mAppSupportDirectory = [[self NSGetPathForDirectory:NSApplicationSupportDirectory :NSUserDomainMask] mutableCopy];
+    mCBLDirectory = [[NSString stringWithFormat:@"%@/%@", mAppSupportDirectory, cblFolder] mutableCopy];
+    mCBLHistoryDirectory = [[NSString stringWithFormat:@"%@/%@", mCBLDirectory, cblHistoryFolder] mutableCopy];
+}
+
+- (void)SetDefaultFileNameAndPath {
+    // Create filename appended with current date
+    [mDateFormatter setDateFormat:@"MM-dd-yyyy"];
+    NSString *currentDate = [mDateFormatter stringFromDate:[NSDate now]];
+
+    NSString *filename = [NSString stringWithFormat:@"cbl-%@.txt", currentDate];
+    [self SetFileName:filename];
+
+    NSString *filepath = [NSString stringWithFormat:@"%@/%@", mCBLHistoryDirectory, mFileName];
+    [self SetFilePath:filepath];
+}
+
+- (bool)SetFileName:(NSString *)filename {
+    if (!filename) { return false; }
+    mFileName = [filename mutableCopy];
+    CBLog(@"[SetFileName]: %@", mFileName);
+    return true;
 }
 
 - (bool)OpenFileAtPath:(NSString *)filepath {
     if (!filepath) { return false; }
-    mFilepath = [filepath mutableCopy];
-    mFileHandle = [NSFileHandle fileHandleForUpdatingAtPath:mFilepath];
+    [self SetFilePath:filepath];
+    mFileHandle = [NSFileHandle fileHandleForUpdatingAtPath:mFilePath];
     mFileContentsLength = [mFileHandle seekToEndOfFile];
     [mFileHandle seekToFileOffset:0];
-
     return true;
 }
 
@@ -124,10 +150,10 @@
     return [[NSString alloc] initWithData:utf8data encoding:NSUTF8StringEncoding];
 }
 
-- (bool)CreateFileAtPathWithContents:(NSString *)directoryPath :(NSString *)fileName :(NSString *)contents {
+- (bool)CreateFileAtPathWithContents:(NSString *)directoryPath :(NSString *)filename :(NSString *)contents {
     if (![self CreateDirectoryAtPath:directoryPath]) { return false; }
 
-    NSString *filepath = [directoryPath stringByAppendingPathComponent:[NSString stringWithFormat:@"/%@", fileName]];
+    NSString *filepath = [directoryPath stringByAppendingPathComponent:[NSString stringWithFormat:@"/%@", filename]];
     return [self CreateFileAtPathWithContents:filepath :contents];
 }
 
@@ -147,10 +173,10 @@
         }
 
         NSData *dataToWrite = [self GetDataFromContents:contents];
-        if ([mFileManager createFileAtPath:filepath contents:dataToWrite attributes:nil]) {
+        success = [mFileManager createFileAtPath:filepath contents:dataToWrite attributes:nil];
+        if (success) {
             mLengthOfLastWrite = dataToWrite ? dataToWrite.length : 0;
             mFileContentsLength = mLengthOfLastWrite;
-            success = true;
             CBLog(@"[CreateFileAtPathWithContents] file created successfully!");
         } else {
             CBLog(@"[CreateFileAtPathWithContents] file creation failed!");
@@ -170,7 +196,7 @@
 }
 
 - (bool)CreateFileAtDefaultPath {
-    return [self CreateFileAtPath:mFilepath];
+    return [self CreateFileAtPath:mFilePath];
 }
 
 // Overwrites content of file.
@@ -232,7 +258,7 @@
                 [mFileHandle seekToEndOfFile];
                 success = [self WriteData:dataToWrite];
                 [mFileHandle closeFile];
-                if (!dataToWrite) { [dataToWrite release]; }
+                [dataToWrite release];
             }
         }
     }
@@ -268,9 +294,10 @@
 // Not complete
 - (NSString *)ReadFileStream:(NSString *)filepath {
     if ([self OpenFileAtPath:filepath]) { return nil; }
-    NSMutableData *data = [NSMutableData dataWithContentsOfFile:mFilepath];
+    NSMutableData *data = [NSMutableData dataWithContentsOfFile:mFilePath];
     NSString *contents = [[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding];
     std::cout << [self TrimString:contents] << std::endl << std::flush;
+    return nil;
 }
 
 - (NSString *)TrimString:(NSString *)nsString {

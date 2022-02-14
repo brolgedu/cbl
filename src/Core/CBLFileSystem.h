@@ -27,12 +27,12 @@ typedef unsigned int uint;
     NSFileHandle *mFileHandle;
     NSDateFormatter *mDateFormatter;
 
-    NSMutableString *mFilepath;
+    NSMutableString *mFilePath;
     NSMutableString *mFileName;
 
-    NSString *mCBLDirectory;
-    NSString *mAppSupportDirectory;
-    NSString *mCBLHistoryDirectory;
+    NSMutableString *mCBLDirectory;
+    NSMutableString *mAppSupportDirectory;
+    NSMutableString *mCBLHistoryDirectory;
 
     ul mFileContentsLength;
     ul mLengthOfLastWrite;
@@ -43,26 +43,32 @@ typedef unsigned int uint;
 - (id)init;
 - (void)dealloc;
 
+- (void)SetDefaultDirectory;
+- (void)SetDefaultFileNameAndPath;
+- (void)SetFileName:(NSString *)filename;
+- (void)SetFilePath:(NSString *)filepath;
+
 - (NSString *)GetFilePath;
-- (NSString *)GetDirectoryPath:(NSString *)filePath;
+- (NSString *)GetFileName;
+- (NSString *)GetDirectoryPath:(NSString *)filepath;
 - (NSString *)NSGetPathForDirectory:(NSSearchPathDirectory)directory :(NSSearchPathDomainMask)domainMask;
-
-- (void)TailFile:(NSString *)filePath;
-- (NSString *)ReadFileStream:(NSString *)filePath;
-- (NSString *)GetContentsOfFileAtPath:(NSString *)filePath;
-- (NSData *)GetDataFromContents:(NSString *)contents;
-
-- (bool)WriteData:(NSData*) data;
 - (bool)CreateDirectoryAtPath:(NSString *)directoryPath;
-- (bool)CreateFileAtPathWithContents:(NSString *)filePathDirectory :(NSString *)fileName :(NSString *)contents;
-- (bool)CreateFileAtPathWithContents:(NSString *)filePath :(NSString *)contents;
-- (bool)CreateFileAtPath:(NSString *)filePath;
-- (bool)CreateFileAtDefaultPath;
 
-- (bool)OpenFileAtPath:(NSString *)filePath;
-- (bool)FileExistsAtPath:(NSString *)filePath;
-- (bool)AppendFileAtPathWithContents:(NSString *)filePath :(NSString *)contents;
-- (bool)OverwriteFileAtPathWithContents:(NSString *)filePath :(NSString *)contents;
+- (bool)CreateFileAtDefaultPath;
+- (bool)CreateFileAtPath:(NSString *)filepath;
+- (bool)CreateFileAtPathWithContents:(NSString *)filepath :(NSString *)contents;
+- (bool)CreateFileAtPathWithContents:(NSString *)filepathDirectory :(NSString *)filename :(NSString *)contents;
+
+- (bool)WriteData:(NSData *)data;
+- (bool)OpenFileAtPath:(NSString *)filepath;
+- (bool)FileExistsAtPath:(NSString *)filepath;
+- (bool)AppendFileAtPathWithContents:(NSString *)filepath :(NSString *)contents;
+- (bool)OverwriteFileAtPathWithContents:(NSString *)filepath :(NSString *)contents;
+
+- (void)TailFile:(NSString *)filepath;
+- (NSString *)ReadFileStream:(NSString *)filepath;
+- (NSString *)GetContentsOfFileAtPath:(NSString *)filepath;
+- (NSData *)GetDataFromContents:(NSString *)contents;
 
 - (NSString *)GetTimeStamp;
 - (NSString *)AppendEndline:(NSString *)nsString;
