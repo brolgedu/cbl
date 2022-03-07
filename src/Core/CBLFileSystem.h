@@ -1,7 +1,5 @@
 #pragma once
 
-#include "CBLTime.h"
-
 #import <Foundation/NSPathUtilities.h>
 #import <Foundation/NSFileManager.h>
 #import <Foundation/NSFileHandle.h>
@@ -19,10 +17,6 @@ typedef unsigned int uint;
 @interface CBLFileSystem : NSObject {
 
 @private
-    void *mAutoreleasePool;
-
-    CBLTime mTime;
-
     NSFileManager *mFileManager;
     NSFileHandle *mFileHandle;
     NSDateFormatter *mDateFormatter;
@@ -36,8 +30,6 @@ typedef unsigned int uint;
 
     ul mFileContentsLength;
     ul mLengthOfLastWrite;
-
-    uint mNumberOfEntries;
 }
 
 - (id)init;
@@ -45,8 +37,8 @@ typedef unsigned int uint;
 
 - (void)SetDefaultDirectory;
 - (void)SetDefaultFileNameAndPath;
-- (void)SetFileName:(NSString *)filename;
-- (void)SetFilePath:(NSString *)filepath;
+- (bool)SetFileName:(NSString *)filename;
+- (bool)SetFilePath:(NSString *)filepath;
 
 - (NSString *)GetFilePath;
 - (NSString *)GetFileName;
@@ -71,8 +63,8 @@ typedef unsigned int uint;
 - (NSData *)GetDataFromContents:(NSString *)contents;
 
 - (NSString *)GetTimeStamp;
-- (NSString *)AppendEndline:(NSString *)nsString;
 - (NSString *)TrimString:(NSString *)nsString;
+- (NSString *)AppendEndline:(NSString *)nsString;
 - (ul)GetFileContentsLength;
 
 @end

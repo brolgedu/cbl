@@ -1,32 +1,32 @@
 #import "CBLFileSystem.h"
 
 #import "Core/Core.h"
+#import "Core/CBLog.h"
 
 #import <Foundation/Foundation.h>
 
 @implementation CBLFileSystem
 
 - (id)init {
-    self = [super init];
+    @autoreleasepool {
+        self = [super init];
 
-    // Initialize variables
-    mAutoreleasePool = [[NSAutoreleasePool alloc] init];
-    mDateFormatter = [[NSDateFormatter alloc] init];
-    mFileManager = [NSFileManager defaultManager];
-    mFileHandle = [[NSFileHandle alloc] init];
+        // Initialize variables
+        mDateFormatter = [[NSDateFormatter alloc] init];
+        mFileManager = [NSFileManager defaultManager];
+        mFileHandle = [[NSFileHandle alloc] init];
 
-    [self SetDefaultDirectory];
-    [self SetDefaultFileNameAndPath];
+        [self SetDefaultDirectory];
+        [self SetDefaultFileNameAndPath];
 
-    // Create file
-    NSCAssert([self CreateFileAtDefaultPath], @"[CreateFileAtDefaultPath]: Error creating file!");
+        // Create file
+        CBLAssert([self CreateFileAtDefaultPath], @"[CreateFileAtDefaultPath]: Error creating file!");
 
-    return self;
+        return self;
+    }
 }
 
 - (void)dealloc {
-    [(NSAutoreleasePool *) mAutoreleasePool release];
-    [super dealloc];
 }
 
 - (NSString *)NSGetPathForDirectory:(NSSearchPathDirectory)directory :(NSSearchPathDomainMask)domainMask {
@@ -132,7 +132,6 @@
         [mFileManager createDirectoryAtPath:directoryPath withIntermediateDirectories:YES attributes:nil error:&error];
         if (error) {
             CBLog(@"[CreateDirectoryAtPath]: error creating directory: %@", error);
-            [error release];
             return false;
         }
     } else {
@@ -181,7 +180,6 @@
         } else {
             CBLog(@"[CreateFileAtPathWithContents] file creation failed!");
         }
-        [dataToWrite release];
 
         // Update class members
         if (![self OpenFileAtPath:(filepath)]) {
@@ -219,7 +217,6 @@
                 CBLog(@"[OverwriteFileAtPathWithContent] Could not open file!");
             }
         }
-        [dataToWrite release];
     }
     return !error;
 }
@@ -234,7 +231,6 @@
         CBLog(@"[WriteData] Write successful!");
     } else {
         CBLog(@"[WriteData] Error writing to file: %@", error);
-        [error release];
         return false;
     }
     return true;
@@ -258,7 +254,6 @@
                 [mFileHandle seekToEndOfFile];
                 success = [self WriteData:dataToWrite];
                 [mFileHandle closeFile];
-                [dataToWrite release];
             }
         }
     }
@@ -267,9 +262,9 @@
 
 - (NSData *)GetDataFromContents:(NSString *)contents {
     if (!contents) { return nil; }
-    NSString *timeStamp = [[self GetTimeStamp] autorelease];
-    NSString *string = [[self TrimString:contents] autorelease];
-    NSString *textToWrite = [[NSString stringWithFormat:@"%@ %@", timeStamp, string] autorelease];
+    NSString *timeStamp = [self GetTimeStamp];
+    NSString *string = [self TrimString:contents];
+    NSString *textToWrite = [NSString stringWithFormat:@"%@ %@", timeStamp, string];
     textToWrite = [self AppendEndline:textToWrite];
 
     return [textToWrite dataUsingEncoding:NSUTF8StringEncoding];
