@@ -1,6 +1,12 @@
 cmake_minimum_required(VERSION 3.20)
 project(cbl LANGUAGES C CXX OBJC OBJCXX)
 
+if (PROJECT_ENABLE_DEBUG)
+    target_compile_definitions(${PROJECT_NAME} PUBLIC
+            CBL_DEBUG=1
+            )
+endif ()
+
 # -----------------------------------------------------------------
 #   CMake Variables
 # -----------------------------------------------------------------
@@ -28,6 +34,9 @@ file(GLOB_RECURSE PROJECT_SOURCES
 list(REMOVE_ITEM PROJECT_SOURCES
         "${PROJECT_SOURCE_DIR}/cblpch.h")
 
+list(REMOVE_ITEM PROJECT_SOURCES
+        "${PROJECT_SOURCE_DIR}/main.mm")
+
 # -----------------------------------------------------------------
 #   Testing Sources (if enabled)
 # -----------------------------------------------------------------
@@ -54,25 +63,34 @@ add_executable(${PROJECT_NAME} "${PROJECT_SOURCES}")
 #   Include Directories
 # -----------------------------------------------------------------
 target_include_directories(${PROJECT_NAME} PUBLIC
-        "${PROJECT_SOURCE_DIR}"
+        "src"
+        "assets/fonts"
+        "vendor/imgui"
         )
 
 # -----------------------------------------------------------------
-#   MacOSX Libraries
+#   Libraries
 # -----------------------------------------------------------------
+# glfw
+find_package(glfw3 3.3 REQUIRED)
+target_link_libraries(${PROJECT_NAME} PUBLIC glfw)
+add_subdirectory("vendor/imgui")
 target_link_libraries(${PROJECT_NAME} PRIVATE
-        "-framework ApplicationServices"
-        "-framework CoreFoundation"
-        "-framework Foundation"             # Required for Objective-C
+        "imgui"
+        "glfw"
         )
+
+if (APPLE)
+    target_link_libraries(${PROJECT_NAME} PRIVATE
+            "-framework ApplicationServices"
+            "-framework CoreFoundation"
+            "-framework Foundation"
+            "-framework OpenGL"
+            )
+endif ()
 
 # Work-around for "does not return NSSTRING" xcode13 commandline tools compile error
 target_compile_options(${PROJECT_NAME} PRIVATE "-DNS_FORMAT_ARGUMENT(A)=")
-
-if (PROJECT_ENABLE_DEBUG)
-    target_compile_definitions(${PROJECT_NAME} PUBLIC
-            CBL_DEBUG=1)
-endif ()
 
 # -----------------------------------------------------------------
 #   Precompiled Header(s)
