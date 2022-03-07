@@ -18,8 +18,6 @@ set(IMGUI_SOURCES
         "backends/imgui_impl_opengl3.h"
         "backends/imgui_impl_opengl3.cpp"
         "backends/imgui_impl_opengl3_loader.h"
-        "backends/imgui_impl_metal.h"
-        "backends/imgui_impl_metal.mm"
         )
 
 add_library(imgui STATIC "${IMGUI_SOURCES}")
