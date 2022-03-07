@@ -1,6 +1,7 @@
 #pragma once
 
 #include "cblpch.h"
+#import <Foundation/NSDateFormatter.h>
 
 #ifdef __cplusplus
 extern "C" {
@@ -10,6 +11,7 @@ extern "C" {
 
 @private
     void *mAutoreleasePool;
+    NSDateFormatter *mDateFormatter;
 
     CGEventSourceStateID mEventSourceStateID;
     PasteboardItemID mItemId;
@@ -23,9 +25,14 @@ extern "C" {
 - (id)init;
 - (void)dealloc;
 
++(CBLClipboard*)GetClipboard;
+
 - (bool)UpdateClipboardText;
 - (void)SetClipboardText:(const char *)text;
-- (const char *)GetClipboardText;
+- (NSString *)GetClipboardText;
+// - (NSString*)GetClipboardTextWithTimeStamp;
+- (NSString *)GetTimeStamp;
+- (NSString *)TrimString:(NSString *)nsString;
 - (const char)GetKeyEvent:(const char)key;
 
 @end

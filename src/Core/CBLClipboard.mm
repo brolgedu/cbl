@@ -10,16 +10,21 @@
 static PasteboardRef sMainClipboard = nil;
 
 - (id)init {
-    self = [super init];
-    mAutoreleasePool = [[NSAutoreleasePool alloc] init];
-    [self UpdateClipboardText];
-    return self;
+    @autoreleasepool {
+        self = [super init];
+        mDateFormatter = [[NSDateFormatter alloc] init];
+        [self UpdateClipboardText];
+        return self;
+    }
 }
 
 - (void)dealloc {
-    [(NSAutoreleasePool *) mAutoreleasePool release];
     CFRelease(mCFData);
-    [super dealloc];
+}
+
++ (CBLClipboard *)GetClipboard {
+    if (!self) { return [[CBLClipboard alloc] init]; }
+    return (CBLClipboard *) self;
 }
 
 - (void)SetClipboardText:(const char *)text {
@@ -77,8 +82,27 @@ static PasteboardRef sMainClipboard = nil;
     return mTextChanged;
 }
 
-- (const char *)GetClipboardText {
-    return mClipboardText.data();
+- (NSString *)GetClipboardText {
+    NSString *string = [NSString stringWithUTF8String:mClipboardText.data()];
+    return [self TrimString:string];
+}
+
+- (NSString *)GetClipboardTextWithTimestamp:(NSString *)contents {
+    if (!contents) { return nil; }
+    NSString *timeStamp = [self GetTimeStamp];
+    NSString *string = [self TrimString:contents];
+    return [NSString stringWithFormat:@"%@ %@", timeStamp, string];
+}
+
+
+- (NSString *)TrimString:(NSString *)nsString {
+    return [[nsString stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceAndNewlineCharacterSet]] copy];
+}
+
+- (NSString *)GetTimeStamp {
+    [mDateFormatter setDateFormat:@"MMM-dd-yyyy HH:mm:ss"];
+    NSString *currTime = [mDateFormatter stringFromDate:[NSDate now]];
+    return [NSString stringWithFormat:@"[%@]:", currTime];
 }
 
 - (const char)GetKeyEvent:(const char)key {
