@@ -21,6 +21,9 @@ static CBLApp *sInstance = nil;
         mImGuiLayer = new ImGuiLayer();
         [self PushLayer:mImGuiLayer];
 
+        mEditorLayer = new CBLEditorLayer();
+        [self PushLayer:mEditorLayer];
+
         return self;
     }
 }
@@ -51,12 +54,12 @@ static CBLApp *sInstance = nil;
     mRunning = false;
 }
 
-- (void)PushLayer:(ImGuiLayer *)layer {
+- (void)PushLayer:(CBLLayer *)layer {
     mLayerStack.PushLayer(layer);
     layer->OnAttach();
 }
 
-- (void)PushOverlay:(ImGuiLayer *)layer {
+- (void)PushOverlay:(CBLLayer *)layer {
     mLayerStack.PushOverlay(layer);
     layer->OnAttach();
 }
