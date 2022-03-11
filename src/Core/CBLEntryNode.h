@@ -13,7 +13,7 @@ extern "C" {
 #define IMGUI_CDECL
 
 enum EntryNodeColumnID {
-    EntryNodeColumnID_Date,
+    EntryNodeColumnID_Timestamp,
     EntryNodeColumnID_Contents
 };
 
@@ -24,13 +24,20 @@ enum EntryNodeColumnID {
     NSString *mTimestamp;
     NSString *mContents;
     int ID;
+
+    bool mSelected;
 }
 - (id)init;
 
 + (CBLEntryNode *)CreateEntryNode:(NSString *)timestamp :(NSString *)contents;
++ (CBLEntryNode*)CopyNode:(CBLEntryNode*) entryNode;
++ (CBLEntryNode*)GetNodeContents:(CBLEntryNode*) entryNode;
 
 -(NSString*)GetTimestamp;
 -(NSString*)GetContents;
+-(unsigned int)GetContentsLength;
+
+-(bool)IsSelected;
 
 @end
 
