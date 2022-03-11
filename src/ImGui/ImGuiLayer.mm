@@ -7,9 +7,10 @@
 #include "Core/CBLApp.h"
 #import "Renderer/Renderer.h"
 
-ImGuiLayer::ImGuiLayer(const std::string &name) {
-    mEntryList = [[CBLEntryList alloc] init];
-    mClipboard = [[CBLClipboard alloc] init];
+ImGuiLayer::ImGuiLayer(const std::string &name)
+        : mName(name) {
+    // mEntryList = [[CBLEntryList alloc] init];
+    // mClipboard = [[CBLClipboard alloc] init];
 }
 
 ImGuiLayer::~ImGuiLayer() {
@@ -26,7 +27,8 @@ void ImGuiLayer::OnAttach() {
     io.ConfigFlags |= ImGuiConfigFlags_ViewportsEnable;          // Enable Multi-viewport / Platform windows
 
     // Setup Dear ImGui style
-    ImGui::StyleColorsDark();
+    // ImGui::StyleColorsDark();
+    SetDefaultTheme();
 
     // When viewports are enabled we tweak WindowRounding/WindowBg so platform windows can look identical to the style
     ImGuiStyle &style = ImGui::GetStyle();
@@ -34,9 +36,6 @@ void ImGuiLayer::OnAttach() {
         style.WindowRounding = 0.0f;
         style.Colors[ImGuiCol_WindowBg].w = 1.0f;
     }
-
-    // Load Fonts
-    io.Fonts->AddFontFromFileTTF("../assets/fonts/DroidSans.ttf", 16.0f);;
 
     CBLApp *app = [CBLApp Get];
     GLFWwindow *window = (GLFWwindow *) app.GetWindow->GetNativeWindow();
@@ -94,10 +93,9 @@ void ImGuiLayer::BeginImGuiDockSpace() {
         ImGui::SetNextWindowViewport(viewport->ID);
         ImGui::PushStyleVar(ImGuiStyleVar_WindowRounding, 0.0f);
         ImGui::PushStyleVar(ImGuiStyleVar_WindowBorderSize, 0.0f);
-        window_flags |= ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoResize |
-                        ImGuiWindowFlags_NoMove;
-        window_flags |= ImGuiWindowFlags_NoBringToFrontOnFocus |
-                        ImGuiWindowFlags_NoNavFocus;
+        window_flags |= ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_NoCollapse |
+                        ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoMove;
+        window_flags |= ImGuiWindowFlags_NoBringToFrontOnFocus | ImGuiWindowFlags_NoNavFocus;
     } else {
         dockspace_flags &= ~ImGuiDockNodeFlags_PassthruCentralNode;
     }
@@ -141,11 +139,6 @@ void ImGuiLayer::OnImGuiRender() {
     // Enable ImGui Docking
     BeginImGuiDockSpace();
 
-    static bool show_demo_window = true;
-    if (show_demo_window) {
-        ImGui::ShowDemoWindow(&show_demo_window);
-    }
-
     if (ImGui::BeginMenuBar()) {
         if (ImGui::BeginMenu("File")) {
             if (ImGui::MenuItem("Exit")) {
@@ -156,23 +149,86 @@ void ImGuiLayer::OnImGuiRender() {
         ImGui::EndMenuBar();
     }
 
-    // Build the list and table
-    ImGui::Begin("Entry List");
-    NSString *clipboard_text = nil;
-    NSString *timestamp = nil;
-    if ([mClipboard UpdateClipboardText]) {
-        timestamp = [[mClipboard GetTimeStamp] mutableCopy];
-        clipboard_text = [[mClipboard GetClipboardText] mutableCopy];
-        CBLEntryNode *node = [CBLEntryNode CreateEntryNode:timestamp :clipboard_text];
-        [mEntryList AddNodeToEntries:node];
-    }
-    [mEntryList ShowTable];
-    ImGui::End();
-
-    // Testing input keys :: Works
-    if (glfwGetKey(window, GLFW_KEY_ESCAPE)) {
-        [app Close];
-    }
-
     EndImGuiDockSpace();
+}
+
+void ImGuiLayer::SetDefaultTheme() {
+    constexpr auto ColorFromBytes = [](uint8_t r, uint8_t g, uint8_t b) {
+        return ImVec4((float) r / 255.0f, (float) g / 255.0f, (float) b / 255.0f, 1.0f);
+    };
+
+    auto &io = ImGui::GetIO();
+    io.Fonts->AddFontFromFileTTF("../assets/fonts/DroidSans.ttf", 16.0f);
+
+    auto &style = ImGui::GetStyle();
+    ImVec4 *colors = style.Colors;
+
+
+    const ImVec4 bgColor = ColorFromBytes(25, 25, 30);
+    const ImVec4 lightBgColor = ColorFromBytes(82, 82, 85);
+    const ImVec4 veryLightBgColor = ColorFromBytes(90, 90, 95);
+
+    const ImVec4 panelColor = ColorFromBytes(51, 51, 75);
+    const ImVec4 panelHoverColor = ColorFromBytes(29, 151, 236);
+    const ImVec4 panelActiveColor = ColorFromBytes(0, 119, 200);
+
+    const ImVec4 textColor = ColorFromBytes(255, 255, 255);
+    const ImVec4 textDisabledColor = ColorFromBytes(151, 151, 151);
+    const ImVec4 borderColor = ColorFromBytes(78, 78, 78);
+
+    colors[ImGuiCol_Text] = textColor;
+    colors[ImGuiCol_TextDisabled] = textDisabledColor;
+    colors[ImGuiCol_TextSelectedBg] = panelActiveColor;
+    colors[ImGuiCol_WindowBg] = bgColor;
+    colors[ImGuiCol_ChildBg] = bgColor;
+    colors[ImGuiCol_PopupBg] = bgColor;
+    colors[ImGuiCol_Border] = borderColor;
+    colors[ImGuiCol_BorderShadow] = borderColor;
+    colors[ImGuiCol_FrameBg] = panelColor;
+    colors[ImGuiCol_FrameBgHovered] = panelHoverColor;
+    colors[ImGuiCol_FrameBgActive] = panelActiveColor;
+    colors[ImGuiCol_TitleBg] = bgColor;
+    colors[ImGuiCol_TitleBgActive] = bgColor;
+    colors[ImGuiCol_TitleBgCollapsed] = bgColor;
+    colors[ImGuiCol_MenuBarBg] = panelColor;
+    colors[ImGuiCol_ScrollbarBg] = panelColor;
+    colors[ImGuiCol_ScrollbarGrab] = lightBgColor;
+    colors[ImGuiCol_ScrollbarGrabHovered] = veryLightBgColor;
+    colors[ImGuiCol_ScrollbarGrabActive] = veryLightBgColor;
+    colors[ImGuiCol_CheckMark] = panelActiveColor;
+    colors[ImGuiCol_SliderGrab] = panelHoverColor;
+    colors[ImGuiCol_SliderGrabActive] = panelActiveColor;
+    colors[ImGuiCol_Button] = panelColor;
+    colors[ImGuiCol_ButtonHovered] = panelHoverColor;
+    colors[ImGuiCol_ButtonActive] = panelHoverColor;
+    colors[ImGuiCol_Header] = panelColor;
+    colors[ImGuiCol_HeaderHovered] = panelHoverColor;
+    colors[ImGuiCol_HeaderActive] = panelActiveColor;
+    colors[ImGuiCol_Separator] = borderColor;
+    colors[ImGuiCol_SeparatorHovered] = borderColor;
+    colors[ImGuiCol_SeparatorActive] = borderColor;
+    colors[ImGuiCol_ResizeGrip] = bgColor;
+    colors[ImGuiCol_ResizeGripHovered] = panelColor;
+    colors[ImGuiCol_ResizeGripActive] = lightBgColor;
+    colors[ImGuiCol_PlotLines] = panelActiveColor;
+    colors[ImGuiCol_PlotLinesHovered] = panelHoverColor;
+    colors[ImGuiCol_PlotHistogram] = panelActiveColor;
+    colors[ImGuiCol_PlotHistogramHovered] = panelHoverColor;
+    colors[ImGuiCol_DragDropTarget] = bgColor;
+    colors[ImGuiCol_NavHighlight] = bgColor;
+    colors[ImGuiCol_DockingPreview] = panelActiveColor;
+    colors[ImGuiCol_Tab] = bgColor;
+    colors[ImGuiCol_TabActive] = panelActiveColor;
+    colors[ImGuiCol_TabUnfocused] = bgColor;
+    colors[ImGuiCol_TabUnfocusedActive] = panelActiveColor;
+    colors[ImGuiCol_TabHovered] = panelHoverColor;
+    colors[ImGuiCol_TableRowBgAlt] = bgColor;
+
+    style.WindowRounding = 1.0f;
+    style.ChildRounding = 1.0f;
+    style.FrameRounding = 1.0f;
+    style.GrabRounding = 1.0f;
+    style.PopupRounding = 1.0f;
+    style.ScrollbarRounding = 1.0f;
+    style.TabRounding = 1.0f;
 }
