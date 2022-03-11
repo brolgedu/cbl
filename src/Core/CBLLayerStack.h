@@ -2,23 +2,23 @@
 
 #include "Core.h"
 
-#include "ImGui/ImGuiLayer.h"
+#include "Core/CBLLayer.h"
 
 class CBLLayerStack {
 public:
     CBLLayerStack();
     ~CBLLayerStack();
 
-    void PushLayer(ImGuiLayer *layer);
-    void PushOverlay(ImGuiLayer *overlay);
-    void PopLayer(ImGuiLayer *layer);
-    void PopOverlay(ImGuiLayer *overlay);
+    void PushLayer(CBLLayer *layer);
+    void PushOverlay(CBLLayer *overlay);
+    void PopLayer(CBLLayer *layer);
+    void PopOverlay(CBLLayer *overlay);
 
-    std::vector<ImGuiLayer *>::iterator begin() { return mLayers.begin(); }
+    std::vector<CBLLayer *>::iterator begin() { return mLayers.begin(); }
 
-    std::vector<ImGuiLayer *>::iterator end() { return mLayers.end(); }
+    std::vector<CBLLayer *>::iterator end() { return mLayers.end(); }
 
 private:
-    std::vector<ImGuiLayer *> mLayers;
+    std::vector<CBLLayer *> mLayers;
     unsigned int mLayerInsertIndex = 0;
 };
