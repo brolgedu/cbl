@@ -22,7 +22,7 @@ static PasteboardRef sMainClipboard = nil;
     CFRelease(mCFData);
 }
 
-+ (CBLClipboard *)GetClipboard {
+- (CBLClipboard *)GetClipboard {
     if (!self) { return [[CBLClipboard alloc] init]; }
     return (CBLClipboard *) self;
 }
@@ -35,8 +35,8 @@ static PasteboardRef sMainClipboard = nil;
     PasteboardClear(sMainClipboard);
     mCFData = CFDataCreate(kCFAllocatorDefault, (const UInt8 *) text, (long) strlen(text));
     if (mCFData) {
-        PasteboardPutItemFlavor(sMainClipboard, (PasteboardItemID) 1, CFSTR("public.utf8-plain-text"),
-                                mCFData, 0);
+        PasteboardPutItemFlavor(sMainClipboard, (PasteboardItemID) 1,
+                                CFSTR("public.utf8-plain-text"), mCFData, 0);
         CFRelease(mCFData);
     }
 }
@@ -103,10 +103,6 @@ static PasteboardRef sMainClipboard = nil;
     [mDateFormatter setDateFormat:@"MMM-dd-yyyy HH:mm:ss"];
     NSString *currTime = [mDateFormatter stringFromDate:[NSDate now]];
     return [NSString stringWithFormat:@"[%@]:", currTime];
-}
-
-- (const char)GetKeyEvent:(const char)key {
-    return (const char) CGEventSourceKeyState(mEventSourceStateID, key);
 }
 
 @end
