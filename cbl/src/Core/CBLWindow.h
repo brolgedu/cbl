@@ -1,19 +1,18 @@
 #pragma once
 
 #include "Core/Core.h"
+#include "Core/CBLColor.h"
+
 #include "Renderer/GraphicsContext.h"
 
 #include "imgui.h"
-
 #include <GLFW/glfw3.h>
-
 #define GLFW_EXPOSE_NATIVE_COCOA
-
 #include <GLFW/glfw3native.h>
 
 #import <objc/runtime.h>
+#include <string>
 
-#include "Renderer/CBLColor.h"
 
 struct WindowProps {
     std::string Title;
