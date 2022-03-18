@@ -1,8 +1,20 @@
 #pragma once
 
 #include "Core/CBLLayer.h"
-#include "Core/CBLEntryList.h"
 #include "Core/CBLClipboard.h"
+
+#include "imgui.h"
+
+static void HelpMarker(const char *desc) {
+    ImGui::TextDisabled("(?)");
+    if (ImGui::IsItemHovered()) {
+        ImGui::BeginTooltip();
+        ImGui::PushTextWrapPos(ImGui::GetFontSize() * 35.0f);
+        ImGui::TextUnformatted(desc);
+        ImGui::PopTextWrapPos();
+        ImGui::EndTooltip();
+    }
+}
 
 class ImGuiLayer : public CBLLayer {
 public:
@@ -13,7 +25,7 @@ public:
     virtual void OnAttach();
     virtual void OnDetach();
     virtual void OnImGuiRender();
-    virtual void SetChromeDark();
+    virtual void SetSlateBlueTheme();
 
     void Begin();
     void End();

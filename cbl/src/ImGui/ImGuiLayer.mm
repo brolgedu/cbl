@@ -19,6 +19,7 @@ void ImGuiLayer::OnAttach() {
     ImGui::CreateContext();
     ImGuiIO &io = ImGui::GetIO();
     (void) io;
+    io.IniFilename = "../cbl/config/imgui.ini";
     io.ConfigFlags |= ImGuiConfigFlags_NavEnableKeyboard;        // Enable Keyboard controls
     io.ConfigFlags |= ImGuiConfigFlags_DockingEnable;            // Enable Docking
     io.ConfigFlags |= ImGuiConfigFlags_ViewportsEnable;          // Enable Multi-viewport / Platform windows
@@ -26,10 +27,7 @@ void ImGuiLayer::OnAttach() {
     // Setup Dear ImGui style
     // ImGui::StyleColorsClassic();
     // ImGui::StyleColorsDark();
-    SetChromeDark();
-
-    // io.Fonts->AddFontFromFileTTF("../assets/fonts/DroidSans.ttf", 17.0f);
-    // io.Fonts->AddFontFromFileTTF("../assets/fonts/FallingSkyBold-zemL.otf", 18.0f);
+    SetSlateBlueTheme();
 
     // When viewports are enabled we tweak WindowRounding/WindowBg so platform windows can look identical to the style
     ImGuiStyle &style = ImGui::GetStyle();
@@ -44,6 +42,8 @@ void ImGuiLayer::OnAttach() {
     // Setup Platform/Renderer bindings
     ImGui_ImplGlfw_InitForOpenGL(window, true);
     ImGui_ImplOpenGL3_Init("#version 410 core");
+
+
 }
 
 void ImGuiLayer::OnDetach() {
@@ -79,9 +79,9 @@ void ImGuiLayer::End() {
 void ImGuiLayer::OnImGuiRender() {
 }
 
-void ImGuiLayer::SetChromeDark() {
+void ImGuiLayer::SetSlateBlueTheme() {
     auto &io = ImGui::GetIO();
-    io.Fonts->AddFontFromFileTTF("../assets/fonts/FallingSkyBold-zemL.otf", 18.0f);
+    io.Fonts->AddFontFromFileTTF("../cbl/assets/fonts/FallingSkyBold-zemL.otf", 18.0f);
 
     // Set window title color
     CBLApp *app = [CBLApp Get];
