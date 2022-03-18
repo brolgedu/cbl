@@ -1,8 +1,8 @@
 #import "CBLEntryList.h"
 
-#import "ImGui/ImGuiLayer.h"
+#import "Core/CBLColor.h"
 
-#import "Renderer/CBLColor.h"
+#import "ImGui/ImGuiLayer.h"
 
 @implementation CBLEntryList
 

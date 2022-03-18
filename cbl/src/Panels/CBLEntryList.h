@@ -1,7 +1,7 @@
 #pragma once
 
-#include "CBLEntryNode.h"
-#include "CBLClipboard.h"
+#include "Entity/CBLEntryNode.h"
+#include "Core/CBLClipboard.h"
 
 #include "imgui.h"
 
