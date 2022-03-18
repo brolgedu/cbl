@@ -2,7 +2,9 @@
 
 #include "GLFW/glfw3.h"
 
-#include "CBLColor.h"
+#ifndef GL_SILENCE_DEPRECATION
+#define GL_SILENCE_DEPRECATION
+#endif
 
 void Renderer::Init() {
 }
