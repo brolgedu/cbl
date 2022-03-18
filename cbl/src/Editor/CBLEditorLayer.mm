@@ -1,12 +1,9 @@
 #include "CBLEditorLayer.h"
-#include "Renderer/Renderer.h"
 
 #include "Core/CBLApp.h"
-
 #include "Core/CBLKeyCodes.h"
 
-#include "imgui.h"
-#include "GLFW/glfw3.h"
+#include "Renderer/Renderer.h"
 
 CBLEditorLayer::CBLEditorLayer(const std::string &name)
         : ImGuiLayer(name) {
@@ -33,6 +30,7 @@ void CBLEditorLayer::OnImGuiRender() {
     static bool show_entry_window = true;
     static bool show_status_panel = false;
     static bool show_example_panel = false;
+    static bool show_text_editor_window = false;
 
     auto app = [CBLApp Get];
     GLFWwindow *window = (GLFWwindow *) app.GetWindow->GetNativeWindow();
@@ -62,6 +60,25 @@ void CBLEditorLayer::OnImGuiRender() {
                     show_entry_window = true;
                 }
             }
+            if (ImGui::MenuItem("Text Editor")) {
+                if (!show_text_editor_window) {
+                    show_text_editor_window = true;
+                }
+            }
+            if (ImGui::MenuItem("ImGui Demo Window")) {
+                if (!show_demo_window) {
+                    show_demo_window = true;
+                }
+            }
+            ImGui::EndMenu();
+        }
+        if (ImGui::BeginMenu("Help")) {
+                HelpMarker(
+                        "Text copied to the clipboard will be posted in the Entry List.\n"
+                        "Double-clicking a cell will copy that text to you clipboard.\n"
+                        "Right-clicking a cell will give you the option to copy or delete the text."
+                        "Pressing CMD+L will clear the entire list."
+                );
             ImGui::EndMenu();
         }
         ImGui::EndMenuBar();
@@ -81,17 +98,24 @@ void CBLEditorLayer::OnImGuiRender() {
         ShowExamplePanel(&show_example_panel);
     }
 
+    if (show_text_editor_window) {
+        ShowTextEditorWindow(&show_text_editor_window);
+    }
+
     EndImGuiDockSpace();
 }
 
 void CBLEditorLayer::OnEvent() {
-    auto app = [CBLApp Get];
-
     if (IsKeyPressed(CBL_KEY_L)) {
         if (IsKeyPressed(CBL_KEY_LEFT_CONTROL)) {
             [mEntryList ClearTable];
         };
     }
+}
+
+void CBLEditorLayer::ShowTextEditorWindow(bool *p_open) {
+    ImGui::Begin("Text Editor", p_open);
+    ImGui::End();
 }
 
 void CBLEditorLayer::ShowExamplePanel(bool *p_open) {
@@ -101,7 +125,6 @@ void CBLEditorLayer::ShowExamplePanel(bool *p_open) {
 }
 
 void CBLEditorLayer::ShowEntryWindow(bool *p_open) {
-    // Build the list and table
     ImGui::Begin("Entry Window", p_open);
     [mEntryList ShowEntryTable];
     ImGui::End();
@@ -109,7 +132,7 @@ void CBLEditorLayer::ShowEntryWindow(bool *p_open) {
 
 void CBLEditorLayer::ShowStatusPanel(bool *p_open) {
     ImGui::Begin("Status Panel", p_open);
-    if (![mClipboard HasTextChanged]) {
+    if ([mClipboard HasTextChanged]) {
         ImGui::TextWrapped("%s", [[mClipboard GetClipboardText] UTF8String]);
     }
     ImGui::End();

@@ -1,11 +1,12 @@
 #pragma once
 
-#include "ImGui/ImGuiLayer.h"
-#include "Core/CBLEntryList.h"
-#include "Core/CBLClipboard.h"
+#include "Core/CBLColor.h"
 #include "Core/CBLWindow.h"
+#include "Core/CBLClipboard.h"
 
-#include "Renderer/CBLColor.h"
+#include "ImGui/ImGuiLayer.h"
+#include "Panels/CBLEntryList.h"
+
 
 class CBLEditorLayer : public ImGuiLayer {
 public:
@@ -24,9 +25,10 @@ public:
     void ShowEntryWindow(bool* p_open);
     void ShowStatusPanel(bool* p_open);
     void ShowExamplePanel(bool* p_open);
+    void ShowTextEditorWindow(bool *p_open);
+    // void ShowHelpWindow(bool *p_open);
 
     bool IsKeyPressed(int key);
-
 private:
     CBLEntryList *mEntryList;
     CBLClipboard *mClipboard;
