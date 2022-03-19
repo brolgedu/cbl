@@ -52,6 +52,10 @@ cd bin/ && ./cbl
 ```
 ___
 
+## Example
+![Alt text](https://github.com/brolgedu/cbl/blob/cbl-gui/misc/cbl-images/cbl-still1.png?raw=true "CBL Example")
+___
+
 ## Contact
 
 Feel free to contact me with any questions or issues regarding the program, or any ideas you may have for features you would like to see added to CBL.
