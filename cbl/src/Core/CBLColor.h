@@ -80,7 +80,7 @@ static ThemeColors ThemeColors;
 
 static std::unordered_map<Color, ImVec4> CBLColors = {
         {CBLCol_WindowBg,             ThemeColors.PrimaryColor},
-        {CBLCol_PopupBg,              ThemeColors.PrimaryColor},
+        {CBLCol_PopupBg,              GetColorsFromBits(40, 43, 46, 255)},
         {CBLCol_FrameBg,              ThemeColors.SecondaryColorLight},
         {CBLCol_FrameBgHovered,       ThemeColors.AccentHovered},
         {CBLCol_FrameBgActive,        ThemeColors.SecondaryColorLight},
