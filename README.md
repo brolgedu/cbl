@@ -29,7 +29,7 @@ Install Homebrew:
   ```
 /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
  ```
-(*if Homebrew gets stuck, follow [this guide](https://github.com/Homebrew/discussions/discussions/622#discussioncomment-832848) and then reinstall Homebrew*)
+*(If the install gets stuck, follow [this guide](https://github.com/Homebrew/discussions/discussions/622#discussioncomment-832848) and then reinstall Homebrew)*.
 
 Then install GLFW and CMake using Homebrew:
 
