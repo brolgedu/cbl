@@ -24,7 +24,7 @@ git clone --recursive https://github.com/brolgedu/cbl <destination path>/<folder
 
 Next, you will need Homebrew to download and install GLFW and CMake  
 
-Install Homebrew (*if Homebrew gets stuck, follow [this guide](https://github.com/Homebrew/discussions/discussions/622#discussioncomment-832848) and then reinstall Homebrew):
+Install Homebrew (*if Homebrew gets stuck, follow [this guide](https://github.com/Homebrew/discussions/discussions/622#discussioncomment-832848) and then reinstall Homebrew*):
 
   ```
 /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
