@@ -64,15 +64,13 @@ target_include_directories(${PROJECT_NAME} PUBLIC
         "${PROJECT_SOURCE_DIR}"
         "${PROJECT_ASSETS_DIR}/fonts"
         "${PROJECT_VENDOR_DIR}/imgui"
-        "${PROJECT_VENDOR_DIR}/GLFW"
         )
 
 # -----------------------------------------------------------------
 #   Libraries
 # -----------------------------------------------------------------
 # glfw
-#find_package(glfw3 3.3 REQUIRED)
-add_subdirectory("${PROJECT_VENDOR_DIR}/GLFW")
+find_package(glfw3 3.3 REQUIRED)
 target_link_libraries(${PROJECT_NAME} PUBLIC glfw)
 add_subdirectory("${PROJECT_VENDOR_DIR}/imgui")
 target_link_libraries(${PROJECT_NAME} PRIVATE
