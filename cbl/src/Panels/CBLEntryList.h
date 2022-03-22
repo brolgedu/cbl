@@ -46,7 +46,7 @@ enum ContentsType {
 
 // Custom ImGui functions
 namespace ImGui {
-    void SelectableWrapped();
+    bool SelectableWrapped(const char *label, bool selected = false, ImGuiSelectableFlags flags = 0, const float window_width = -1.0f);
 }
 
 #ifdef __cplusplus

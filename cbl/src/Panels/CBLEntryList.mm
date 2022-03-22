@@ -142,17 +142,16 @@
 
         if (ImGui::TableSetColumnIndex(1)) {
             const char *contents = [[node GetContents] UTF8String];
-            const bool item_is_selected = [node IsSelected];
-
-            // TODO: Wrap text w/in selectable
-            if (ImGui::Selectable(contents, item_is_selected,
-                                  ImGuiSelectableFlags_SpanAllColumns | ImGuiSelectableFlags_AllowDoubleClick,
-                                  ImVec2(0, row_min_height))) {
-
+            bool item_is_selected = [node IsSelected];
+            if (ImGui::SelectableWrapped(contents, item_is_selected, ImGuiSelectableFlags_AllowDoubleClick,
+                                         ImGui::GetColumnWidth(1))) {
                 if (ImGui::IsMouseDoubleClicked(ImGuiMouseButton_Left)) {
                     [mClipboard SetClipboardText:contents];
                     mScrollToBottom = false;
                 }
+
+                // TODO: Create read-only text box to allow user to highlight specific text to copy
+
                 [self ClearSelectedEntries];
                 [node SetSelected:true];
             }
@@ -173,6 +172,7 @@
         }
         ImGui::PopID();
     }
+
 }
 
 - (CBLEntryNode *)GetSelectedEntry {
@@ -227,15 +227,24 @@
 
 namespace ImGui {
 
-    // This function will eventually allow for wrapped text w/in a selectable
-    bool SelectableWrapped(const char *label, bool selected = false, ImGuiSelectableFlags flags = 0,
-                           const ImVec2 &size = ImVec2(0, 0)) {
-        // const float text_size = ImGui::CalcTextSize("A").x;
-        //
-        // Selectable("##hidden", selected, flags, ImVec2(text_size, size.y));
+    // This function will wrap text w/in a selectable
+    bool SelectableWrapped(const char *label, bool selected, ImGuiSelectableFlags flags, const float window_width) {
+        ImFont *font = ImGui::GetFont();
+        ImVec2 size = font->CalcTextSizeA(font->FontSize, GetContentRegionMax().x, window_width, label);
 
-        // You might calc CalcTextSizeA() with wrapping setting to obtain a size,
-        // use this size to create a Selectable() with an empty label (e.g. Selectable("##hidden", size))
-        // then using ImDrawList->AddText() to render the text over it.
+        if (Selectable("##hidden", selected, flags, ImVec2(0.0, size.y))) {
+            return true;
+        }
+
+        const ImVec2 p0 = ImGui::GetItemRectMin();
+        const ImVec2 p1 = ImGui::GetItemRectMax();
+        const ImVec2 text_pos = ImVec2(p0.x + 5.0f, p0.y);
+        ImDrawList *draw_list = ImGui::GetWindowDrawList();
+
+        ImVec4 clip_rect(p0.x, p0.y, p1.x + 5.0f, p1.y); // AddText() takes a ImVec4* here so let's convert.
+        draw_list->AddText(font, font->FontSize, text_pos, IM_COL32_WHITE, label, NULL,
+                           window_width, &clip_rect);
+
+        return false;
     }
 }
