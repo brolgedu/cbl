@@ -12,6 +12,9 @@
 extern "C" {
 #endif
 
+#define CBL_VERSION         "1.01"
+#define CBL_VERSION_NUM     10010
+
 @interface CBLApp : NSObject {
 
     CBLWindow* mWindow;
